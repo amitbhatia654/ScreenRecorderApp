@@ -1,9 +1,7 @@
-import { data } from "autoprefixer";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    console.log("delete  requueuuet");
     const response = NextResponse.json({
       message: "User logout successfully",
     });

@@ -1,12 +1,17 @@
 "use client"
 import axios from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function page() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const route=useRouter();
   const loggingOut=async()=>{
-    const res=await axios.get('/api/users/logout');
-    console.log(res,'the responsee is')
+    const {data}=await axios.get('/api/users/logout');
+    if(data.message=="User logout successfully")
+    route.push('/login')
+    
   }
   return (
     <div>

@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
+const uri = process.env.NEXT_PUBLIC_MONGODB_URL;
 
 export default function dbConfig() {
   try {
-    mongoose.connect(
-      "mongodb+srv://amitbhatia:rCfhrl4kzRqi1Hj4@amitatlas.bjqch7f.mongodb.net/"
-    );
+    mongoose.connect(`${uri}`);
     const connection = mongoose.connection;
 
     connection.on("connected", () => {
