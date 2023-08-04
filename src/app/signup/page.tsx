@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React from 'react'
 import {useForm} from "react-hook-form";
@@ -6,7 +7,7 @@ import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast"
 import { useRouter } from 'next/navigation';
 
-export default function Signup() {
+export default function page() {
   const route=useRouter();
   const {handleSubmit,register} =useForm();
   
@@ -16,7 +17,7 @@ export default function Signup() {
     const result =await axios.post('/api/users/signup',data);
     console.log("the response is",result.data.message);
     toast.success(result.data.message);
-    route.push('/login')
+    route.push('/')
   }
   
 
@@ -30,7 +31,7 @@ export default function Signup() {
        Password <input type="password" {...register("password")}/><br></br>
 
        <button > Submit</button><br></br>
-       <Link href="/login">Login Me</Link>
+       <Link href="/">Login Me</Link>
 
 
 
