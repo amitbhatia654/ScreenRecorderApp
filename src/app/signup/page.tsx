@@ -12,31 +12,34 @@ export default function page() {
   const {handleSubmit,register} =useForm();
   
   const handleRegister=async(data:any)=>{
-    //console.log("All data is ",data)
-    
     const result =await axios.post('/api/users/signup',data);
-    console.log("the response is",result.data.message);
     toast.success(result.data.message);
     route.push('/')
   }
   
 
   return (
-    
-      <form onSubmit={handleSubmit(handleRegister)}>
-       <h1>My SignUp Page</h1><br></br>
-       Name <input type="text" {...register("name")}/><br></br>
-       Email <input type="text" {...register("email")}/><br></br>
+    <div className='bgimg'> 
+  <div className="container ">
+    <div className="row login-signup-upper">
+<form onSubmit={handleSubmit(handleRegister)}>
+  <legend>Signup </legend>
+       
+       Name <input type="text" {...register("name")} className="mx-5 my-2"required={true}/><br></br>
+       Email <input type="email" {...register("email")} className='mx-5 my-2' required={true}/><br></br>
 
-       Password <input type="password" {...register("password")}/><br></br>
+       Password <input type="password" {...register("password")}  className=" mx-3 my-2"required={true}/><br></br>
 
-       <button > Submit</button><br></br>
-       <Link href="/">Login Me</Link>
+       <button  className='mx-2 btn btn-primary'> Submit</button>
+       <Link href="/" className='mx-3'>Login</Link>
 
 
 
 <Toaster />
       </form>
+    </div>
+  </div>
+      </div>
     
   )
 }

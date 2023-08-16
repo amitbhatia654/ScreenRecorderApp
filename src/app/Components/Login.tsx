@@ -1,31 +1,44 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 
 export default function Login() {
   const route =useRouter();
+  const [loading,setLoading]=useState(false);
   const {handleSubmit,register} =useForm()
 
   const loginDetails=async(details:any)=>{
+    setLoading(true);
     const {data}=await axios.post('/api/users/login',details);
     
     if(data.message=="yeah created token")
-    route.push("/profile");
-    else
-    alert(data.message);
+    route.push("/home");
+  else
+  alert(data.message);
+  setLoading(false);
+
   }
   return (
-    <div >
-<form onSubmit={handleSubmit(loginDetails)}>
-  Email<input type="text"  placeholder='Enter Your Email' {...register("email")}/><br></br>
-  Password <input type="password" placeholder='Enter Your Password' {...register("password")}/><br></br>
-  <button type='submit'> Submit</button>
+    <div className='bgimg'>
+      <div className="container ">
+        <div className="row login-signup-upper">
+
+          <fieldset>
+        <form onSubmit={handleSubmit(loginDetails)} >
+  <legend>Login </legend>
+  Email<input type="email"  placeholder='Enter Your Email' {...register("email")} className='my-4 mx-5' required={true}/><br></br>
+  Password <input type="password" placeholder='Enter Your Password' {...register("password")}  required={true} className='mx-2'/><br></br>
+  <button disabled={loading ? true :false} type='submit' className='btn btn-primary my-3'>Log In</button><Link className='mx-3' href="/signup">Sign Up</Link>
 </form>
-  <Link href="/signup">Go to Sign Up page</Link>
+</fieldset>
+</div>
+
+      </div>
     </div>
   )
 }

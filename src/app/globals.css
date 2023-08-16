@@ -22,3 +22,30 @@
       transparent,
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 } */
+
+#profile-pic {
+  display: none;
+}
+
+.login-signup-upper {
+  height: 300px;
+  width: 400px;
+  border: 1px solid red;
+  background-image: url('.././../Images/loginImage2.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: rgb(7, 6, 6);
+  font-weight: bold;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bgimg {
+  background-image: url("../../Images/bgimg.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 700px;
+  border: 1px solid navy;
+}
