@@ -1,136 +1,188 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client"
-import axios from 'axios'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React,{useState,useEffect} from 'react'
-import Navbar from '../Components/Navbar'
-import Image from 'next/image'
-import profilepic from './profilepic.jpg'
-import { useForm } from 'react-hook-form'
-
+"use client";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import Navbar from "../Components/Navbar";
+import Image from "next/image";
+import profilepic from "./profilepic.jpg";
+import { useForm } from "react-hook-form";
 
 export default function page() {
-
-  const {register,handleSubmit}=useForm();
-  const [postImage,setPostImage]=useState({myfile:""})
-  const [details,setDetails]=useState({email:"",name:"",_id:"",aboutMe:''});
-
-  useEffect(()=>{
-    
+  useEffect(() => {
     getUser();
-  },[])
+  }, []);
 
-  function convertToBase64(file:any){
-    return new Promise((resolve,reject)=>{
-      const fileReader=new FileReader();
+  const { register, handleSubmit, setValue } = useForm();
+  const [postImage, setPostImage] = useState({ myfile: "" });
+  const [imageData, setImageData] = useState("");
+  const [details, setDetails] = useState({
+    email: "",
+    name: "",
+    _id: "",
+    aboutMe: "",
+  });
+
+  function convertToBase64(file: any) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
-      fileReader.onload=()=>resolve(fileReader.result);
-      fileReader.onerror=()=>reject(Error)
-    })
-
+      fileReader.onload = () => resolve(fileReader.result);
+      fileReader.onerror = () => reject(Error);
+    });
   }
 
-  const route=useRouter();
-  
-  const loggingOut=async()=>{
-    const {data}=await axios.get('/api/users/logout');
-    if(data.message=="User logout successfully")
-    route.push('/')
-  }
-
-  
-  const getUser=async()=>{
-    const {data}=await axios.get("/api/users/userDetails"); 
-    //console.log(data.UserDetails,'The khgggg')
+  const getUser = async () => {
+    const { data } = await axios.get("/api/users/userDetails");
     setDetails(data.UserDetails);
-    setPostImage({...postImage,myfile:data.UserDetails.image})
-  }
 
-  const handleUpdate=async(data:any)=>{
+    setPostImage({ ...postImage, myfile: data.UserDetails.image });
+  };
 
-const imageData=await convertToBase64(data?.image[0]) 
-//console.log(imageData,'func called');
-const a: unknown = imageData;
-const b: string = a as string;
+  const handleUpdate = async (data: any) => {
+    //console.log(data.image[0], "in update func");
+    // var imageData;
 
-setPostImage({...postImage,myfile:b});
-const userData={
-  id:details._id,
-  name:data.name,
-  about:data.about,
-  image:imageData
-}
-const res=await axios.put('/api/users/userDetails',userData);
-console.log(res,'the respponse is');
-  }
+    // if (data.image[0]) {
+    //   imageData = await convertToBase64(data?.image[0]);
+    //   const a: unknown = imageData;
+    //   const b: string = a as string;
+    //   setPostImage({ ...postImage, myfile: b });
+    // }
+    const userData = {
+      id: details._id,
+      name: data.name,
+      about: data.about,
+      image: postImage.myfile,
+    };
+    const res = await axios.put("/api/users/userDetails", userData);
+  };
+
+  const changeProfilePic = async (event: any) => {
+    const files = event.target.files;
+    var imageData = await convertToBase64(files[0]);
+    const a: unknown = imageData;
+    const b: string = a as string;
+    setPostImage({ ...postImage, myfile: b });
+  };
   return (
     <div>
       <Navbar></Navbar>
-      <button  className='btn btn-primary'  onClick={loggingOut}>Logout</button><br></br>
+      <br></br>
       welcome to the profile page<br></br>
-
       <table>
         <thead>
-          <tr><td>
-          <Image src={postImage.myfile || profilepic} height={250} width={250} alt='profile Pic'></Image>
+          <tr>
+            <td>
+              <Image
+                src={postImage.myfile || profilepic}
+                height={250}
+                width={250}
+                alt="profile Pic"
+                priority
+                className="profile-pic"
+              ></Image>
             </td>
           </tr>
-        <tr>
-          <td>Name</td>
-          <td>{details?.name}</td>
-        </tr>
+          <tr>
+            <td>Name</td>
+            <td>{details?.name}</td>
+          </tr>
 
-        <tr>
-          <td>Email</td>
-          <td>{details?.email}</td>
-        </tr>
+          <tr>
+            <td>Email</td>
+            <td>{details?.email}</td>
+          </tr>
 
-        <tr>
-          <td>About</td>
-          <td>{details?.aboutMe}</td>
-        </tr>
+          <tr>
+            <td>About</td>
+            <td>{details?.aboutMe}</td>
+          </tr>
         </thead>
       </table>
-      
       <br></br>
-{/* <!-- Button trigger modal --> */}
-<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
-  Update Profile
-</button>
-
-{/* <!-- Modal --> */}
-<div className="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title" id="staticBackdropLabel">Modal title</h5>
-        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div className="modal-body">
-        <form onSubmit={handleSubmit(handleUpdate)}>
-         
-         <label htmlFor="profile-pic" >
-          <Image src={postImage.myfile || profilepic} height={250} width={250} alt='profile Pic'></Image>
-         </label>
-         <br></br>
-          <input type="file" id='profile-pic' {...register('image')}accept='.jpeg,.png,.jpg'/>
-         Name: <input type="text"  {...register('name')}/><br></br>
-         About: <input type="text" {...register('about')} /><br></br>
-        <button type='submit' >Update</button>
-        
-        </form>
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" data-dismiss="modal">cancel</button>
-         <button type='button' className="btn btn-primary" data-dismiss="modal" >Done</button>
+      {/* <!-- Button trigger modal --> */}
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-toggle="modal"
+        data-target="#staticBackdrop"
+        onClick={() => {
+          setValue("name", details.name), setValue("about", details.aboutMe);
+        }}
+      >
+        Update Profile
+      </button>
+      {/* <!-- Modal --> */}
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabIndex={-1}
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="staticBackdropLabel">
+                Modal title
+              </h5>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmit(handleUpdate)}>
+                <label htmlFor="profile-pic">
+                  <Image
+                    src={postImage.myfile || profilepic}
+                    height={250}
+                    width={250}
+                    alt="profile Pic"
+                    className="profile-pic"
+                  ></Image>
+                </label>
+                <br></br>
+                <input
+                  type="file"
+                  id="profile-pic"
+                  {...register("image")}
+                  accept=".jpeg,.png,.jpg"
+                  onChange={changeProfilePic}
+                />
+                Name: <input type="text" {...register("name")} />
+                <br></br>
+                About: <input type="text" {...register("about")} />
+                <br></br>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-dismiss="modal"
+                onClick={handleSubmit(handleUpdate)}
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-   
-    </div>
-  )
+  );
 }

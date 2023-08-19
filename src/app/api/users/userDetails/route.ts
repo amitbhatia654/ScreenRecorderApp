@@ -22,7 +22,6 @@ export async function PUT(request: NextRequest) {
       { _id: reqBody.id },
       { name: reqBody.name, image: reqBody.image, aboutMe: reqBody.about }
     );
-    console.log(res, "The res is");
 
     return NextResponse.json({ message: "Profile Updated Successfully" });
   } catch (error) {

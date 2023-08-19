@@ -42,10 +42,20 @@
   align-items: center;
 }
 
+.profile-pic {
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
 .bgimg {
   background-image: url("../../Images/bgimg.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   height: 700px;
   border: 1px solid navy;
+}
+
+.create-form {
+  background-color: rgb(234, 236, 121);
+  padding: 50px;
 }
